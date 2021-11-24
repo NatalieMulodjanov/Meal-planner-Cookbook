@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "327021803648",
+    "firebase_url": "https://finalproject-35e77-default-rtdb.firebaseio.com",
+    "project_id": "finalproject-35e77",
+    "storage_bucket": "finalproject-35e77.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327021803648:android:12b83b98edd2b1aa7e4e65",
+        "android_client_info": {
+          "package_name": "com.androidstudio.Meal_Planner_Cookbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "327021803648-ngu58jpgv2ptiu978ujh2jba4nv3330q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3smVH62A1ZZI_l3pqAxM0D7WadKzK9z4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "327021803648-ngu58jpgv2ptiu978ujh2jba4nv3330q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327021803648:android:9f1284933ca615957e4e65",
+        "android_client_info": {
+          "package_name": "com.example.cookbookapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "327021803648-ngu58jpgv2ptiu978ujh2jba4nv3330q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3smVH62A1ZZI_l3pqAxM0D7WadKzK9z4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "327021803648-ngu58jpgv2ptiu978ujh2jba4nv3330q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327021803648:android:7e6251cfc9dcc4d77e4e65",
+        "android_client_info": {
+          "package_name": "com.example.meal_planner_cookbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "327021803648-ngu58jpgv2ptiu978ujh2jba4nv3330q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3smVH62A1ZZI_l3pqAxM0D7WadKzK9z4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "327021803648-ngu58jpgv2ptiu978ujh2jba4nv3330q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
