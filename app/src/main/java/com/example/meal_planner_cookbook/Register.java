@@ -22,11 +22,12 @@ public class Register extends AppCompatActivity {
     EditText regfullname, regusername, regemail, regpassword, regconfirmation;
     Button register, goLogin;
 
-    UserHelper user;
+    User user;
     long maxid = 0;
 
     FirebaseDatabase rootNode;
-    DatabaseReference reference;
+    DatabaseReference rootReference;
+    DatabaseReference childReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,33 +41,20 @@ public class Register extends AppCompatActivity {
         regconfirmation = findViewById(R.id.passwordConfirmRegisterET);
         register = findViewById(R.id.registerB);
         goLogin = findViewById(R.id.goLoginB);
-        //get all the values
-        String fullname = regfullname.getText().toString();
-        String username = regusername.getText().toString();
-        String email = regemail.getText().toString();
-        String password = regpassword.getText().toString();
 
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
-                    maxid = (snapshot.getChildrenCount());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        //
+        rootReference = FirebaseDatabase.getInstance().getReference();
+        childReference = rootReference.child("user");
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rootNode = FirebaseDatabase.getInstance(); //connect to firebase
-                reference = rootNode.getReference().child("User"); //set the path to correct node
-                UserHelper user = new UserHelper(fullname, username, email, password); //new user
-                reference.child(String.valueOf(maxid + 1)).setValue(user); //add the user with the title of username
+                String fullname = regfullname.getText().toString();
+                String username = regusername.getText().toString();
+                String email = regemail.getText().toString();
+                String password = regpassword.getText().toString();
+                User user = new User(fullname, username, email, password); //new user
+                childReference.setValue(user);
                 Toast.makeText(getApplicationContext(),
                         "data entered successfully", Toast.LENGTH_SHORT).show();
             }

@@ -1,12 +1,12 @@
 package com.example.meal_planner_cookbook;
 
-public class UserHelper {
+public class User {
     String fullname, username, email, password;
 
-    public UserHelper() {
+    public User() {
     }
 
-    public UserHelper(String fullname, String username, String email, String password) {
+    public User(String fullname, String username, String email, String password) {
         this.fullname = fullname;
         this.username = username;
         this.email = email;
