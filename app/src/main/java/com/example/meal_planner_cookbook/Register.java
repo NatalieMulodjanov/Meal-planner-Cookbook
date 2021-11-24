@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 public class Register extends AppCompatActivity {
 
     // https://finalproject-35e77-default-rtdb.firebaseio.com/
-    EditText regfullname, regusername, regemail, regphone, regpassword;
+    EditText regfullname, regusername, regemail, regphone, regpassword, regconfirmpassword;
     Button register, goLogin;
 
     User user;
@@ -41,6 +41,7 @@ public class Register extends AppCompatActivity {
         regemail = findViewById(R.id.emailRegisterET);
         regphone = findViewById(R.id.phoneRegisterET);
         regpassword = findViewById(R.id.passwordRegisterET);
+        regconfirmpassword = findViewById(R.id.confirmpasswordRegisterET);
         register = findViewById(R.id.registerB);
         goLogin = findViewById(R.id.goLoginB);
         user = new User(); //new user
@@ -72,6 +73,7 @@ public class Register extends AppCompatActivity {
         String email = regemail.getText().toString().trim();
         String phone = regphone.getText().toString().trim();
         String password = regpassword.getText().toString().trim();
+        String confirm = regconfirmpassword.getText().toString().trim();
         //errors
         //TODO: handle other errors as well
         if(fullname.isEmpty()){
@@ -107,6 +109,16 @@ public class Register extends AppCompatActivity {
         if(password.length() < 6){
             regpassword.setError("Minimum password length should be 6 characters!");
             regpassword.requestFocus();
+            return;
+        }
+        if(confirm.isEmpty()){
+            regconfirmpassword.setError("Password confirmation is required!");
+            regconfirmpassword.requestFocus();
+            return;
+        }
+        if(!confirm.equals(password)){
+            regconfirmpassword.setError("Passwords do not match!");
+            regconfirmpassword.requestFocus();
             return;
         }
 
