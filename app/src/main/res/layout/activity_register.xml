@@ -66,14 +66,28 @@
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:gravity="center"
+        android:text="Phone number: "
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.016"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.49" />
+
+    <TextView
+        android:id="@+id/phoneRegisterTV"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:gravity="center"
         android:text="Password: "
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.097"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.49" />
+        app:layout_constraintVertical_bias="0.573" />
 
     <EditText
         android:id="@+id/fullnameRegisterET"
@@ -118,6 +132,21 @@
         app:layout_constraintVertical_bias="0.41000003" />
 
     <EditText
+        android:id="@+id/phoneRegisterET"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        android:hint="phone number"
+        android:inputType="phone"
+        android:maxLength="12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.49" />
+
+    <EditText
         android:id="@+id/passwordRegisterET"
         android:layout_width="280dp"
         android:layout_height="40dp"
@@ -129,7 +158,7 @@
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.49" />
+        app:layout_constraintVertical_bias="0.57" />
 
     <Button
         android:id="@+id/registerB"
@@ -142,7 +171,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.612" />
+        app:layout_constraintVertical_bias="0.676" />
 
     <Button
         android:id="@+id/goLoginB"
