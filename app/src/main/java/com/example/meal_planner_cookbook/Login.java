@@ -13,7 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Login extends AppCompatActivity {
 
-    EditText username, password;
+    EditText email, password;
     Button login, goRegister;
 
     FirebaseDatabase rootNode;
@@ -23,7 +23,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        username = findViewById(R.id.usernameLoginET);
+        email = findViewById(R.id.emailLoginET);
         password = findViewById(R.id.passwordLoginET);
         login = findViewById(R.id.loginB);
         goRegister = findViewById(R.id.goRegisterB);
@@ -39,15 +39,11 @@ public class Login extends AppCompatActivity {
 
     //TODO: all other validations
 
-    private boolean validateUsername() {
-        String input = username.getText().toString();
-        String noWhiteSpace = "\\A\\w{4,20}\\z";
+    private boolean validateEmail() {
+        String input = email.getText().toString();
 
         if(input.isEmpty()){
-            username.setError("Field cannot be empty");
-            return false;
-        } else if(!input.matches(noWhiteSpace)){
-            username.setError("White Spaces are not allowed");
+            email.setError("Field cannot be empty");
             return false;
         }
         return true;

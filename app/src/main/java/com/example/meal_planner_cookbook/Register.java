@@ -19,15 +19,12 @@ import com.google.firebase.database.ValueEventListener;
 public class Register extends AppCompatActivity {
 
     // https://finalproject-35e77-default-rtdb.firebaseio.com/
-    EditText regfullname, regusername, regemail, regpassword, regconfirmation;
+    EditText regfullname, regusername, regemail, regpassword;
     Button register, goLogin;
 
     User user;
-    long maxid = 0;
 
-    FirebaseDatabase rootNode;
-    DatabaseReference rootReference;
-    DatabaseReference childReference;
+    DatabaseReference rootReference, childReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,35 +35,38 @@ public class Register extends AppCompatActivity {
         regusername = findViewById(R.id.usernameRegisterET);
         regemail = findViewById(R.id.emailRegisterET);
         regpassword = findViewById(R.id.passwordRegisterET);
-        regconfirmation = findViewById(R.id.passwordConfirmRegisterET);
         register = findViewById(R.id.registerB);
         goLogin = findViewById(R.id.goLoginB);
+        user = new User(); //new user
 
-        //
-        rootReference = FirebaseDatabase.getInstance().getReference();
-        childReference = rootReference.child("user");
+        //firebase reference
+        rootReference = FirebaseDatabase.getInstance().getReference(); //connect to firebase
+        childReference = rootReference.child("user"); //create user table
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //get text box values
                 String fullname = regfullname.getText().toString();
                 String username = regusername.getText().toString();
                 String email = regemail.getText().toString();
                 String password = regpassword.getText().toString();
-                User user = new User(fullname, username, email, password); //new user
-                childReference.setValue(user);
+                //set user data
+                user.setFullname(fullname);
+                user.setUsername(username);
+                user.setEmail(email);
+                user.setPassword(password);
+                childReference.child(user.getFullname()).setValue(user);
                 Toast.makeText(getApplicationContext(),
                         "data entered successfully", Toast.LENGTH_SHORT).show();
             }
         });
-
         goLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openLoginForm();
             }
         });
-
     }
 
     private void openLoginForm() {
