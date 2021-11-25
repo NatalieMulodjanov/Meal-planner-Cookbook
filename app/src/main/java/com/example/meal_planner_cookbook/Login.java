@@ -100,7 +100,7 @@ public class Login extends AppCompatActivity {
         goRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openRegisterForm();
+                startActivity(new Intent(getApplicationContext(), Register.class));
             }
         });
 
@@ -130,7 +130,7 @@ public class Login extends AppCompatActivity {
         //errors
         //TODO: handle other errors as well
         if(email.isEmpty()){
-            regemail.setError("Email name is required!");
+            regemail.setError("Email is required!");
             regemail.requestFocus();
             return;
         }
@@ -161,12 +161,6 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
-
-    }
-
-    private void openRegisterForm() {
-        Intent intent = new Intent(this, Register.class);
-        startActivity(intent);
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
