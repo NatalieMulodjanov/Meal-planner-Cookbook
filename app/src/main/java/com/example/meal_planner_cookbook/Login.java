@@ -1,6 +1,7 @@
 package com.example.meal_planner_cookbook;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -18,15 +19,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.TimeUnit;
 
@@ -63,7 +61,7 @@ public class Login extends AppCompatActivity {
                 // [START start_phone_auth]
                 PhoneAuthOptions options =
                         PhoneAuthOptions.newBuilder(mAuth)
-                                .setPhoneNumber("+15145028904")       // Phone number to verify
+                                .setPhoneNumber("+14389948815")       // Phone number to verify
                                 .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
                                 .setActivity(Login.this)                 // Activity (for callback binding)
                                 .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
@@ -153,13 +151,27 @@ public class Login extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
-                    startActivity(new Intent(getApplicationContext(), Home.class));
+                    startActivityForResult(new Intent(getApplicationContext(), CodeVerification.class),1);
+
                 } else {
                     Toast.makeText(getApplicationContext(),
                             "Failed to login user!\nCheck credentials!", Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1) {
+            if(resultCode == RESULT_OK) {
+                String verificationCode = data.getStringExtra("code");
+                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, verificationCode);
+                signInWithPhoneAuthCredential(credential);
+            }
+        }
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
@@ -169,14 +181,15 @@ public class Login extends AppCompatActivity {
                     public void onComplete(Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-
                             FirebaseUser user = task.getResult().getUser();
-                            // Update UI
+                            Intent intent = new Intent(getApplicationContext(), Home.class);
+                            intent.putExtra("authenticatedUser", user);
+                            startActivity(intent);
 
                         } else {
                             // Sign in failed, display a message and update the UI
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                // The verification code entered was invalid
+                                Toast.makeText(getApplicationContext(), "BITCH YOU THOUGHT!", Toast.LENGTH_LONG).show();
                             }
                         }
                     }
