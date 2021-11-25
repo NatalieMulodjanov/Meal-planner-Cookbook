@@ -9,6 +9,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,10 +30,11 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.TimeUnit;
 
-public class Login extends AppCompatActivity {
+public class Login extends AppCompatActivity implements View.OnClickListener {
 
     EditText regemail, regpassword;
     Button login, goRegister;
+    ProgressBar progressBar;
 
     User user;
     private FirebaseAuth mAuth; //firebase authenticator
@@ -48,8 +50,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         regemail = findViewById(R.id.emailLoginET);
         regpassword = findViewById(R.id.passwordLoginET);
-        login = findViewById(R.id.loginB);
-        goRegister = findViewById(R.id.goRegisterB);
+        progressBar = findViewById(R.id.loginPB);
         user = new User(); //new user
         mAuth = FirebaseAuth.getInstance(); //initialize firebase authenticator
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -62,9 +63,6 @@ public class Login extends AppCompatActivity {
                 // 2 - Auto-retrieval. On some devices Google Play services can automatically
                 //     detect the incoming verification SMS and perform verification without
                 //     user action.
-
-
-
                 signInWithPhoneAuthCredential(credential);
             }
 
@@ -78,7 +76,6 @@ public class Login extends AppCompatActivity {
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
                 }
-
                 // Show a message and update the UI
             }
 
@@ -96,17 +93,12 @@ public class Login extends AppCompatActivity {
                         mResendToken.toString(), Toast.LENGTH_SHORT).show();
             }
         };
+    }
 
-        goRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), Register.class));
-            }
-        });
-
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    @Override
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.loginB:
                 loginUser();
                 // [START start_phone_auth]
                 PhoneAuthOptions options =
@@ -118,9 +110,11 @@ public class Login extends AppCompatActivity {
                                 .build();
                 PhoneAuthProvider.verifyPhoneNumber(options);
                 // [END start_phone_auth]
-            }
-        });
-
+                break;
+            case R.id.goRegisterB:
+                startActivity(new Intent(getApplicationContext(), Register.class));
+                break;
+        }
     }
 
     private void loginUser() {
