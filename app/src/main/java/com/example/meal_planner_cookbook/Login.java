@@ -28,7 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.concurrent.TimeUnit;
 
-public class Login extends AppCompatActivity implements View.OnClickListener {
+public class Login extends AppCompatActivity {
 
     EditText regemail, regpassword;
     Button login, goRegister;
@@ -49,8 +49,34 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         regemail = findViewById(R.id.emailLoginET);
         regpassword = findViewById(R.id.passwordLoginET);
         progressBar = findViewById(R.id.loginPB);
+        login = findViewById(R.id.loginB);
+        goRegister = findViewById(R.id.goRegisterB);
         user = new User(); //new user
         mAuth = FirebaseAuth.getInstance(); //initialize firebase authenticator
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginUser();
+                // [START start_phone_auth]
+                PhoneAuthOptions options =
+                        PhoneAuthOptions.newBuilder(mAuth)
+                                .setPhoneNumber("+14389948815")       // Phone number to verify
+                                .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                                .setActivity(Login.this)                 // Activity (for callback binding)
+                                .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+                                .build();
+                PhoneAuthProvider.verifyPhoneNumber(options);
+                // [END start_phone_auth]
+            }
+        });
+
+        goRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), Register.class));
+            }
+        });
 
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
@@ -92,28 +118,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         mResendToken.toString(), Toast.LENGTH_SHORT).show();
             }
         };
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.loginB:
-                loginUser();
-                // [START start_phone_auth]
-                PhoneAuthOptions options =
-                        PhoneAuthOptions.newBuilder(mAuth)
-                                .setPhoneNumber("+15145028904")       // Phone number to verify
-                                .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                                .setActivity(Login.this)                 // Activity (for callback binding)
-                                .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
-                                .build();
-                PhoneAuthProvider.verifyPhoneNumber(options);
-                // [END start_phone_auth]
-                break;
-            case R.id.goRegisterB:
-                startActivity(new Intent(getApplicationContext(), Register.class));
-                break;
-        }
     }
 
     private void loginUser() {
