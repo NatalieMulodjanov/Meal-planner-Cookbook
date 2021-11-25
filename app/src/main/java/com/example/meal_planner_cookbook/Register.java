@@ -22,11 +22,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class Register extends AppCompatActivity implements View.OnClickListener {
+public class Register extends AppCompatActivity {
 
     // https://finalproject-35e77-default-rtdb.firebaseio.com/
     EditText regfullname, regusername, regemail, regphone, regpassword, regconfirmpassword;
     ProgressBar progressBar;
+    Button register, back;
 
     User user;
     private FirebaseAuth mAuth; //firebase authenticator
@@ -43,23 +44,28 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         regphone = findViewById(R.id.phoneRegisterET);
         regpassword = findViewById(R.id.passwordRegisterET);
         regconfirmpassword = findViewById(R.id.confirmpasswordRegisterET);
+        register = findViewById(R.id.registerB);
+        back = findViewById(R.id.goLoginB);
         user = new User(); //new user
         mAuth = FirebaseAuth.getInstance(); //initialize firebase authenticator
 
         //firebase reference
         rootReference = FirebaseDatabase.getInstance().getReference(); //connect to firebase
         childReference = rootReference.child("user"); //create user table
-    }
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.registerB:
+
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 registerUser();
-                break;
-            case R.id.goLoginB:
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), Login.class)); //redirect to login
-                break;
-        }
+            }
+        });
     }
 
     private void registerUser(){
