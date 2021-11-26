@@ -91,6 +91,7 @@ public class AccountFragment extends Fragment {
 
 
 
+
             logout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -99,7 +100,6 @@ public class AccountFragment extends Fragment {
                 }
             });
         }
-
     }
 
     private void showData() {
