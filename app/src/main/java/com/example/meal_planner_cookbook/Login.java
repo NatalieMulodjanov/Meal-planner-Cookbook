@@ -152,7 +152,6 @@ public class Login extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
                     startActivityForResult(new Intent(getApplicationContext(), CodeVerification.class),1);
-
                 } else {
                     Toast.makeText(getApplicationContext(),
                             "Failed to login user!\nCheck credentials!", Toast.LENGTH_LONG).show();

@@ -46,6 +46,7 @@ public class Register extends AppCompatActivity {
         regconfirmpassword = findViewById(R.id.confirmpasswordRegisterET);
         register = findViewById(R.id.registerB);
         back = findViewById(R.id.goLoginB);
+        progressBar = findViewById(R.id.registerPB);
         user = new User(); //new user
         mAuth = FirebaseAuth.getInstance(); //initialize firebase authenticator
 
