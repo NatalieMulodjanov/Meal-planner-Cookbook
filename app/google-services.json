@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "327021803648-ka5nua8ldp3sofkci5rni0qqghtsvoh2.apps.googleusercontent.com",
+          "client_id": "327021803648-v2ce9f1ckgh1j30j696ekplmhrlap1t4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.androidstudio.Meal_Planner_Cookbook",
-            "certificate_hash": "9d82f8a32b259c2eaf4d28427270e7fdc3a80715"
+            "certificate_hash": "5e1b4efd665f8303665a5a00b7a43ba95aef9b5a"
           }
         },
         {
@@ -52,11 +52,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "327021803648-8ajlof8gfs5872aln4ar0d1tk5qj2f2a.apps.googleusercontent.com",
+          "client_id": "327021803648-lnbkkj4qqv895choca0m36lvhpn5jce2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.cookbookapplication",
-            "certificate_hash": "9d82f8a32b259c2eaf4d28427270e7fdc3a80715"
+            "certificate_hash": "5e1b4efd665f8303665a5a00b7a43ba95aef9b5a"
           }
         },
         {

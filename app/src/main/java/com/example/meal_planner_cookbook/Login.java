@@ -61,7 +61,7 @@ public class Login extends AppCompatActivity {
                 // [START start_phone_auth]
                 PhoneAuthOptions options =
                         PhoneAuthOptions.newBuilder(mAuth)
-                                .setPhoneNumber("+14389948815")       // Phone number to verify
+                                .setPhoneNumber("+15142659329")       // Phone number to verify
                                 .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
                                 .setActivity(Login.this)                 // Activity (for callback binding)
                                 .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
@@ -152,7 +152,6 @@ public class Login extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
                     startActivityForResult(new Intent(getApplicationContext(), CodeVerification.class),1);
-
                 } else {
                     Toast.makeText(getApplicationContext(),
                             "Failed to login user!\nCheck credentials!", Toast.LENGTH_LONG).show();
