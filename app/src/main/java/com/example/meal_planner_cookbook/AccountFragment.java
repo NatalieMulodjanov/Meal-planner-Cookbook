@@ -32,6 +32,7 @@ public class AccountFragment extends Fragment {
     Button edit, save, logout;
     EditText accfullname, accusername, accemail, accphone, accpassword;
     ProgressBar progressBar;
+    boolean editVis, saveVis;
 
     FirebaseUser user;
     DatabaseReference reference;
@@ -82,15 +83,31 @@ public class AccountFragment extends Fragment {
             accphone = getView().findViewById(R.id.phoneAccountET);
             accpassword = getView().findViewById(R.id.passwordAccountET);
             edit = getView().findViewById(R.id.editAccountB);
+            edit.setClickable(true); //set edit to un-clickable
+            edit.setVisibility(View.VISIBLE); //set edit to visible
             save = getView().findViewById(R.id.saveAccountB);
+            save.setClickable(false); // set save to un-clickable
+            save.setVisibility(View.INVISIBLE); //set edit to invisible
             logout = getView().findViewById(R.id.logoutAccountB);
             progressBar = getView().findViewById(R.id.accountPB);
 
             //preset user's values
             showData();
 
-
-
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    accfullname.setClickable(true);
+                    accusername.setClickable(true);
+                    accemail.setClickable(true);
+                    accphone.setClickable(true);
+                    accpassword.setClickable(true);
+                    edit.setClickable(false); //set edit to un-clickable
+                    edit.setVisibility(View.INVISIBLE); //set edit to visible
+                    save.setClickable(true); // set save to un-clickable
+                    save.setVisibility(View.VISIBLE); //set edit to invisible
+                }
+            });
 
             logout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -112,25 +129,19 @@ public class AccountFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User userProfile = snapshot.getValue(User.class);
                 if(userProfile != null){
-                    //get user info in String format
-                    String fullname = userProfile.fullname;
-                    String username = userProfile.username;
-                    String email = userProfile.email;
-                    String phone = userProfile.phone;
-                    String password = userProfile.password;
                     //set Edit text boxes
-                    accfullname.setText(fullname);
-                    accfullname.setText(username);
-                    accfullname.setText(email);
-                    accfullname.setText(phone);
-                    accfullname.setText(password);
+                    accfullname.setText(userProfile.fullname);
+                    accfullname.setText(userProfile.username);
+                    accfullname.setText(userProfile.email);
+                    accfullname.setText(userProfile.phone);
+                    accfullname.setText(userProfile.password);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(),
-                        "Something went wrong!", Toast.LENGTH_LONG);
+                        "Something went wrong!", Toast.LENGTH_SHORT);
             }
         });
     }
