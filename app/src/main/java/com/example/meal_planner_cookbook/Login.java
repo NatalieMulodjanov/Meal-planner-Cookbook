@@ -33,7 +33,6 @@ public class Login extends AppCompatActivity {
     EditText regemail, regpassword;
     Button login, goRegister;
     ProgressBar progressBar;
-
     User user;
     private FirebaseAuth mAuth; //firebase authenticator
     DatabaseReference rootReference, childReference;

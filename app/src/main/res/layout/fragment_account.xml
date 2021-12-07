@@ -76,7 +76,8 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.534" />
+        app:layout_constraintVertical_bias="0.534"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <EditText
         android:id="@+id/passwordAccountET"
@@ -108,9 +109,9 @@
         android:id="@+id/saveAccountB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="save"
-        android:visibility="invisible"
         android:clickable="false"
+        android:text="save"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
