@@ -32,7 +32,7 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        fm =getSupportFragmentManager();
+        fm = getSupportFragmentManager();
 
 //        if (findViewById(R.id.fragment_container )!= null){
 //            FragmentTransaction ft = fm.beginTransaction();
@@ -43,7 +43,7 @@ public class Home extends AppCompatActivity {
 
         navigationView = findViewById(R.id.navigationBNB);
 
-//        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new DiscoverFragment()).commit(); //set initial fragment
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new DiscoverFragment()).commit(); //set initial fragment
         navigationView.setSelectedItemId(R.id.nav_discover); //set initial id to discover fragment
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() { //navigation listener
             @Override

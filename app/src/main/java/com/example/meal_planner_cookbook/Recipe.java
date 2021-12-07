@@ -6,6 +6,9 @@ public class Recipe {
     private boolean vegetarian;
     private boolean vegan;
     private boolean ketogenic;
+    private boolean glutenFree;
+    private boolean dairyFree;
+    private boolean cheap;
     private int servings;
     private int preparationMinutes;
     private int cookingMinutes;
@@ -15,12 +18,13 @@ public class Recipe {
     private String image;
     private String instructions;
 
-    public Recipe(boolean vegetarian, boolean vegan, boolean ketogenic, int servings, int preparationMinutes,
-                  int cookingMinutes, List<Ingredient> extendedIngredients, long id, String title, String image,
-                  String instructions) {
+    public Recipe(boolean vegetarian, boolean vegan, boolean ketogenic, boolean glutenFree, boolean dairyFree, boolean cheap, int servings, int preparationMinutes, int cookingMinutes, List<Ingredient> extendedIngredients, long id, String title, String image, String instructions) {
         this.vegetarian = vegetarian;
         this.vegan = vegan;
         this.ketogenic = ketogenic;
+        this.glutenFree = glutenFree;
+        this.dairyFree = dairyFree;
+        this.cheap = cheap;
         this.servings = servings;
         this.preparationMinutes = preparationMinutes;
         this.cookingMinutes = cookingMinutes;
@@ -53,6 +57,30 @@ public class Recipe {
 
     public void setKetogenic(boolean ketogenic) {
         this.ketogenic = ketogenic;
+    }
+
+    public boolean isGlutenFree() {
+        return glutenFree;
+    }
+
+    public void setGlutenFree(boolean glutenFree) {
+        this.glutenFree = glutenFree;
+    }
+
+    public boolean isDairyFree() {
+        return dairyFree;
+    }
+
+    public void setDairyFree(boolean dairyFree) {
+        this.dairyFree = dairyFree;
+    }
+
+    public boolean isCheap() {
+        return cheap;
+    }
+
+    public void setCheap(boolean cheap) {
+        this.cheap = cheap;
     }
 
     public int getServings() {

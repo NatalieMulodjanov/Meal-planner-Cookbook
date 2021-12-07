@@ -2,7 +2,7 @@ package com.example.meal_planner_cookbook;
 
 import java.util.List;
 
-public class GetRandomRecipesResponse {
+public class GetRandomRecipesResponse implements ApiResults{
     private List<Recipe> recipes;
 
     public GetRandomRecipesResponse(List<Recipe> recipes) {

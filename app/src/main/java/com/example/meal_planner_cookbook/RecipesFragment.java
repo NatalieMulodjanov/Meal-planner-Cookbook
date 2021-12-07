@@ -24,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RecipesFragment extends Fragment {
 
-    RandomRecipesRVAdapter adapter;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -64,7 +64,7 @@ public class RecipesFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        getRandomRecipes();
+
     }
 
     @Override
@@ -75,34 +75,5 @@ public class RecipesFragment extends Fragment {
 
     }
 
-    private void getRandomRecipes(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RecipeAPI.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        RecipeAPI api = retrofit.create(RecipeAPI.class);
-
-        Call<GetRandomRecipesResponse> call = api.getRandomRecipes();
-
-        call.enqueue(new Callback<GetRandomRecipesResponse>() {
-            @Override
-            public void onResponse(Call<GetRandomRecipesResponse> call, Response<GetRandomRecipesResponse> response) {
-
-                GetRandomRecipesResponse recipes = response.body();
-                RecyclerView recyclerView = getView().findViewById(R.id.recyclerView);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                adapter = new RandomRecipesRVAdapter(getContext(), recipes);
-                recyclerView.setAdapter(adapter);
-
-            }
-
-            @Override
-            public void onFailure(Call<GetRandomRecipesResponse> call, Throwable t) {
-                Toast.makeText(getContext(), "failed", Toast.LENGTH_LONG).show();
-            }
-        });
-
-    }
 
 }
