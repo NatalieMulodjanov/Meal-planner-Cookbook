@@ -12,8 +12,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.database.collection.LLRBNode;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,6 +37,7 @@ public class DiscoverFragment extends Fragment {
     Retrofit retrofit;
     RecyclerView recyclerView;
     RecipeAPI api;
+    RelativeLayout discover_layout;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -92,6 +98,7 @@ public class DiscoverFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         searchBar = view.findViewById(R.id.searchBar);
         recyclerView = view.findViewById(R.id.recyclerView);
+        discover_layout = view.findViewById(R.id.discover_layout);
 
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -137,11 +144,21 @@ public class DiscoverFragment extends Fragment {
         call.enqueue(new Callback<GetRandomRecipesResponse>() {
             @Override
             public void onResponse(Call<GetRandomRecipesResponse> call, Response<GetRandomRecipesResponse> response) {
-
-                GetRandomRecipesResponse recipes = response.body();
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                adapter = new RecipeRVAdapter(getContext(), recipes);
-                recyclerView.setAdapter(adapter);
+                if (response.code() == 200) {
+                    GetRandomRecipesResponse recipes = response.body();
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    adapter = new RecipeRVAdapter(getContext(), recipes);
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    discover_layout.removeAllViews();
+                    TextView textField = new TextView(getContext());
+                    textField.setText("API returned the following error: " + response.errorBody().toString() + "\nPlease try again later");
+                    textField.setTextSize(20);
+                    textField.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT));
+                    discover_layout.addView(textField);
+                }
             }
 
             @Override

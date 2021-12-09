@@ -34,19 +34,25 @@ public class RecipeRVAdapter extends RecyclerView.Adapter <RecipeRVAdapter.ViewH
 
     @Override
     public void onBindViewHolder(@NonNull RecipeRVAdapter.ViewHolder holder, int position) {
-        if (data instanceof GetRandomRecipesResponse){
-            GetRandomRecipesResponse response = (GetRandomRecipesResponse)data;
-            String title = response.getRecipes().get(position).getTitle();
-            Glide.with(inflator.getContext()).asBitmap().load(new GlideUrl(response.getRecipes().get(position).getImage(), new LazyHeaders.Builder().addHeader("User-Agent", "your_user_agent").build())).into(holder.image);
-            holder.title.setText(holder.title.getText() + title);
-            holder.itemView.setId((int)response.getRecipes().get(position).getId());
-        } else if (data instanceof GetSearchResultsResponse){
-            GetSearchResultsResponse response = (GetSearchResultsResponse)data;
-            String title = response.getResults().get(position).getTitle();
-            String imageUrl = response.getBaseUri() + response.getResults().get(position).getImage();
-            Glide.with(inflator.getContext()).asBitmap().load(new GlideUrl(imageUrl, new LazyHeaders.Builder().addHeader("User-Agent", "your_user_agent").build())).into(holder.image);
-            holder.title.setText(holder.title.getText() + title);
-            holder.itemView.setId((int)response.getResults().get(position).getId());
+        if (data != null) {
+            if (data instanceof GetRandomRecipesResponse){
+                GetRandomRecipesResponse response = (GetRandomRecipesResponse)data;
+                String title = response.getRecipes().get(position).getTitle();
+                if (response.getRecipes().get(position).getImage() != null && !response.getRecipes().get(position).getImage().equals("")) {
+                    Glide.with(inflator.getContext()).asBitmap().load(new GlideUrl(response.getRecipes().get(position).getImage(), new LazyHeaders.Builder().addHeader("User-Agent", "your_user_agent").build())).into(holder.image);
+                }
+                holder.title.setText(holder.title.getText() + title);
+                holder.itemView.setId((int)response.getRecipes().get(position).getId());
+            } else if (data instanceof GetSearchResultsResponse){
+                GetSearchResultsResponse response = (GetSearchResultsResponse)data;
+                String title = response.getResults().get(position).getTitle();
+                if (response.getResults().get(position).getImage() != null && response.getBaseUri() != null) {
+                    String imageUrl = response.getBaseUri() + response.getResults().get(position).getImage();
+                    Glide.with(inflator.getContext()).asBitmap().load(new GlideUrl(imageUrl, new LazyHeaders.Builder().addHeader("User-Agent", "your_user_agent").build())).into(holder.image);
+                }
+                holder.title.setText(holder.title.getText() + title);
+                holder.itemView.setId((int)response.getResults().get(position).getId());
+            }
         }
     }
 

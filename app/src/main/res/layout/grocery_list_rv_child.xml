@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/groceryListLinearLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="30dp"
+    android:layout_marginBottom="0dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/recipeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/purple_700"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="35dp" />
+
+    <ImageView
+        android:id="@+id/recipeImage"
+        android:layout_width="match_parent"
+        android:layout_height="237dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_marginBottom="20dp"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+</LinearLayout>

@@ -1,61 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".SingleRecipeFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text=""
+            android:textSize="30dp"/>
+
 
         <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="193dp"
-            app:layout_constraintBottom_toTopOf="@+id/diet"
-            app:layout_constraintEnd_toEndOf="@id/title"
-            app:layout_constraintTop_toTopOf="@id/title"
+            android:layout_height="219dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="-2dp"
             tools:src="@tools:sample/avatars" />
-
-        <ListView
-            android:id="@+id/diet"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+        <Button
+            android:id="@+id/saveRecipeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
+            android:layout_marginRight="10dp"
+            android:text="Save" />
+
+        <Button
+            android:id="@+id/addToList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:text="Add to list" />
+
+        <Button
+            android:id="@+id/share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Share" />
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+        <ListView
+            android:id="@+id/ingredients"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
             android:layout_marginEnd="3dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image" />
+            app:layout_constraintHorizontal_bias="0.0" />
 
-        <ListView
-            android:id="@+id/ingredients"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="12dp"
-            app:layout_constraintBottom_toTopOf="@+id/diet"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image"
-            app:layout_constraintVertical_bias="0.45"></ListView>
+            <ListView
+                android:id="@+id/diet"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginBottom="12dp"
+                app:layout_constraintVertical_bias="0.45" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/instructions"
@@ -63,12 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="TextView"
-            app:layout_constraintBottom_toTopOf="@+id/ingredients"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</ScrollView>
+            android:text="LAL"
+            android:textSize="18dp"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

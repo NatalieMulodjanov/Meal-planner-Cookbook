@@ -43,8 +43,8 @@ public class Home extends AppCompatActivity {
 
         navigationView = findViewById(R.id.navigationBNB);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new DiscoverFragment()).commit(); //set initial fragment
-        navigationView.setSelectedItemId(R.id.nav_discover); //set initial id to discover fragment
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RecipesFragment()).commit(); //set initial fragment
+        navigationView.setSelectedItemId(R.id.nav_recipes); //set initial id to discover fragment
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() { //navigation listener
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) { //set fragment to which ever of these depending on which tab is selected

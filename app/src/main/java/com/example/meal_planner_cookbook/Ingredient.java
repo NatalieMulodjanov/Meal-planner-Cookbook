@@ -9,6 +9,8 @@ public class Ingredient {
     private String unit;
     private String originalString;
 
+    public Ingredient() {}
+
     public Ingredient(long id, String aisle, String image, String name, String amount, String unit, String originalString) {
         this.id = id;
         this.aisle = aisle;

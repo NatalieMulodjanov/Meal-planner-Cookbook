@@ -17,6 +17,9 @@ public class Recipe {
     private String title;
     private String image;
     private String instructions;
+    private String sourceUrl;
+
+    public Recipe() {}
 
     public Recipe(boolean vegetarian, boolean vegan, boolean ketogenic, boolean glutenFree, boolean dairyFree, boolean cheap, int servings, int preparationMinutes, int cookingMinutes, List<Ingredient> extendedIngredients, long id, String title, String image, String instructions) {
         this.vegetarian = vegetarian;
@@ -33,6 +36,14 @@ public class Recipe {
         this.title = title;
         this.image = image;
         this.instructions = instructions;
+    }
+
+    public String getSourceUrl() {
+        return sourceUrl;
+    }
+
+    public void setSourceUrl(String sourceUrl) {
+        this.sourceUrl = sourceUrl;
     }
 
     public boolean isVegetarian() {

@@ -1,5 +1,7 @@
 package com.example.meal_planner_cookbook;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,7 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,9 +23,17 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +53,11 @@ public class SingleRecipeFragment extends Fragment {
     RecipeAPI api;
     private int id;
     List<String> ingredientList;
-
+    Button saveRecipeButton, addToList, share;
+    FirebaseDatabase rootNode;
+    DatabaseReference cookBookReference;
+    DatabaseReference groceryListReference;
+    Recipe recipe;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,6 +75,10 @@ public class SingleRecipeFragment extends Fragment {
     public SingleRecipeFragment(int id) {
         this();
         this.id = id;
+    }
+
+    public SingleRecipeFragment(Recipe recipe) {
+        this.recipe = recipe;
     }
 
     /**
@@ -110,34 +130,180 @@ public class SingleRecipeFragment extends Fragment {
         ingredients = view.findViewById(R.id.ingredients);
         ingredient = view.findViewById(R.id.ingredient);
         ingredientList = new ArrayList<String>();
+        saveRecipeButton = view.findViewById(R.id.saveRecipeButton);
+        addToList = view.findViewById(R.id.addToList);
+        share = view.findViewById(R.id.share);
+        rootNode = FirebaseDatabase.getInstance();
+        cookBookReference = rootNode.getReference("cookbook");
+        groceryListReference = rootNode.getReference("groceryList");
 
-        Call<Recipe> recipeCall = api.getRecipeById(this.id);
-
-        recipeCall.enqueue(new Callback<Recipe>() {
+        saveRecipeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<Recipe> call, Response<Recipe> response) {
-                Recipe recipe = response.body();
-                for(Ingredient ingredient1 : recipe.getExtendedIngredients()){
-                    ingredientList.add(ingredient1.getOriginalString());
-                }
+            public void onClick(View view) {
+                cookBookReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        addCurrentRecipeToDatabase(snapshot, cookBookReference, "TestUser");
+                        cookBookReference.removeEventListener(this);
+                    }
 
-                title.setText(recipe.getTitle());
-                Glide.with(getView()).asBitmap().load(new GlideUrl(recipe.getImage(), new LazyHeaders.Builder().addHeader("User-Agent", "your_user_agent").build())).into(image);
-                instructions.setText(Html.fromHtml(recipe.getInstructions()));
-                List<String> diets = getDiet(recipe);
-                ArrayAdapter adapter = new ArrayAdapter(getContext(),
-                        R.layout.ingredient_list_item, R.id.ingredient, ingredientList);
-                ingredients.setAdapter(adapter);
-                ArrayAdapter adapterDiet = new ArrayAdapter(getContext(),
-                        R.layout.ingredient_list_item, R.id.ingredient, diets);
-                diet.setAdapter(adapterDiet);
-            }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-            @Override
-            public void onFailure(Call<Recipe> call, Throwable t) {
-                Toast.makeText(getContext(), "failed", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
+
+        addToList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                groceryListReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        addCurrentRecipeToDatabase(snapshot, groceryListReference, "TestUser");
+                        groceryListReference.removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+
+        if (recipe == null) {
+            Call<Recipe> recipeCall = api.getRecipeById(this.id);
+
+            recipeCall.enqueue(new Callback<Recipe>() {
+                @Override
+                public void onResponse(Call<Recipe> call, Response<Recipe> response) {
+                    recipe = response.body();
+                    populateView();
+                }
+
+                @Override
+                public void onFailure(Call<Recipe> call, Throwable t) {
+                    Toast.makeText(getContext(), "failed", Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            populateView();
+        }
+    }
+
+    private void addCurrentRecipeToDatabase(DataSnapshot snapshot, DatabaseReference databaseToAddTo, String username) {
+        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+            if (dataSnapshot.getKey().equals(username)) {
+                Map<String, Recipe> listToUpdate = dataSnapshot.getValue(new GenericTypeIndicator<Map<String, Recipe>>() {});
+                listToUpdate.put(String.valueOf(recipe.getId()), recipe);
+                databaseToAddTo.child(username).setValue(listToUpdate);
+                return;
+            }
+        }
+        Map<String, Recipe> newList = new HashMap<String, Recipe>();
+        newList.put(String.valueOf(recipe.getId()), recipe);
+        databaseToAddTo.child(username).setValue(newList);
+    }
+
+    private void populateView() {
+        for(Ingredient ingredient1 : recipe.getExtendedIngredients()){
+            ingredientList.add(ingredient1.getOriginalString());
+        }
+
+        title.setText(recipe.getTitle());
+        Glide.with(getView()).asBitmap().load(new GlideUrl(recipe.getImage(), new LazyHeaders.Builder().addHeader("User-Agent", "your_user_agent").build())).into(image);
+        instructions.setText(Html.fromHtml(recipe.getInstructions()));
+        List<String> diets = getDiet(recipe);
+        ArrayAdapter adapter = new ArrayAdapter(getContext(),
+                R.layout.ingredient_list_item, R.id.ingredient, ingredientList);
+        ingredients.setAdapter(adapter);
+        setListViewHeightBasedOnChildren(ingredients);
+        ArrayAdapter adapterDiet = new ArrayAdapter(getContext(),
+                R.layout.ingredient_list_item, R.id.ingredient, diets);
+        diet.setAdapter(adapterDiet);
+        setListViewHeightBasedOnChildren(diet);
+
+        cookBookReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.getKey().equals("TestUser")) {
+                        Map<String, Recipe> listToUpdate = dataSnapshot.getValue(new GenericTypeIndicator<Map<String, Recipe>>() {});
+                        if (listToUpdate.containsKey(String.valueOf(recipe.getId()))) {
+                            saveRecipeButton.setEnabled(false);
+                            saveRecipeButton.setText("Saved");
+                            return;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        groceryListReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.getKey().equals("TestUser")) {
+                        Map<String, Recipe> listToUpdate = dataSnapshot.getValue(new GenericTypeIndicator<Map<String, Recipe>>() {});
+                        if (listToUpdate.containsKey(String.valueOf(recipe.getId()))) {
+                            addToList.setEnabled(false);
+                            addToList.setText("Added to list");
+                            return;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String text = "Check out this amazing recipe I found!\nYou can go on: " + recipe.getSourceUrl() + " to find more!";
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+                shareIntent.setType("text/plain");
+                startActivity(Intent.createChooser(shareIntent, "Share recipe..."));
+            }
+        });
+
+    }
+
+    private void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(
+                listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+
+        View view = null;
+
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(
+                        desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
     }
 
     private List getDiet(Recipe recipe) {
