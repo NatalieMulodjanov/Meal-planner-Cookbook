@@ -129,6 +129,4 @@ public class RecipesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recipeRecyclerView);
     }
-
-
-    }
+}

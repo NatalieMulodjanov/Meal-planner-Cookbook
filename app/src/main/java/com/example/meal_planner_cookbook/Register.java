@@ -131,7 +131,9 @@ public class Register extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     user = new User(fullname, username, email, phone, password); //set user data
-                    childReference.child(user.getFullname()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() { //insert user
+                    FirebaseDatabase.getInstance().getReference("users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() { //insert user
                         @Override
                         public void onComplete(@NonNull Task<Void> task) { //checks
                             if(task.isSuccessful()){ //if successful register

@@ -36,6 +36,7 @@ public class AccountFragment extends Fragment {
 
     FirebaseUser user;
     DatabaseReference reference;
+    DatabaseReference rootReference, childReference;
     String userID;
     Intent intent;
 
@@ -90,7 +91,9 @@ public class AccountFragment extends Fragment {
             save.setVisibility(View.INVISIBLE); //set edit to invisible
             logout = getView().findViewById(R.id.logoutAccountB);
             progressBar = getView().findViewById(R.id.accountPB);
-
+            //get user
+            user = FirebaseAuth.getInstance().getCurrentUser();
+            reference = FirebaseDatabase.getInstance().getReference();
             //preset user's values
             showData();
 
@@ -112,7 +115,7 @@ public class AccountFragment extends Fragment {
             logout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FirebaseAuth.getInstance().signOut();
+                    user = FirebaseAuth.getInstance().getCurrentUser();
                     startActivity(new Intent(getContext(), Login.class));
                 }
             });
@@ -123,19 +126,33 @@ public class AccountFragment extends Fragment {
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("user");
         userID = user.getUid();
+        String userName = (String) user.getDisplayName();
 
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User userProfile = snapshot.getValue(User.class);
-                if(userProfile != null){
-                    //set Edit text boxes
-                    accfullname.setText(userProfile.fullname);
-                    accfullname.setText(userProfile.username);
-                    accfullname.setText(userProfile.email);
-                    accfullname.setText(userProfile.phone);
-                    accfullname.setText(userProfile.password);
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.getKey().equals(user.getUid())){
+                        //get values of user
+                        String fullname = dataSnapshot.child("fullname").getValue(String.class);
+                        String username = dataSnapshot.child("username").getValue(String.class);
+                        String email = dataSnapshot.child("email").getValue(String.class);
+                        String phone = dataSnapshot.child("phone").getValue(String.class);
+                        String password = dataSnapshot.child("password").getValue(String.class);
+
+                        //insert values in view
+                        accfullname.setText(fullname);
+                        accusername.setText(username);
+                        accemail.setText(email);
+                        accphone.setText(phone);
+                        accpassword.setText(password);
+                    }
                 }
+
+
+
+
+
             }
 
             @Override
