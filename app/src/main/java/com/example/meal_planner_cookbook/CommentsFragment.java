@@ -52,9 +52,7 @@ public class CommentsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public CommentsFragment(Recipe recipe) {
-        this.recipe = recipe;
-    }
+    public CommentsFragment(Recipe recipe) {this.recipe = recipe;}
 
     /**
      * Use this factory method to create a new instance of
@@ -101,7 +99,7 @@ public class CommentsFragment extends Fragment {
         submitComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Comment comment = new Comment("TestUser", commentTextView.getText().toString(), new Date().toString());
+                Comment comment = new Comment(Home.currentUser.getFullname(), commentTextView.getText().toString(), new Date().toString());
                 commentsReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {

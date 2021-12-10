@@ -147,9 +147,9 @@ public class SingleRecipeFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (saveRecipeButton.getText().equals("Save")) {
-                            addCurrentRecipeToDatabase(snapshot, cookBookReference, "TestUser");
+                            addCurrentRecipeToDatabase(snapshot, cookBookReference, Home.currentUser.getId());
                         } else {
-                            removeCurrentRecipeFromDatabase(snapshot, cookBookReference, "TestUser");
+                            removeCurrentRecipeFromDatabase(snapshot, cookBookReference, Home.currentUser.getId());
                         }
                         cookBookReference.removeEventListener(this);
                     }
@@ -169,9 +169,9 @@ public class SingleRecipeFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (addToList.getText().equals("Add to list")) {
-                            addCurrentRecipeToDatabase(snapshot, groceryListReference, "TestUser");
+                            addCurrentRecipeToDatabase(snapshot, groceryListReference, Home.currentUser.getId());
                         } else {
-                            removeCurrentRecipeFromDatabase(snapshot, groceryListReference, "TestUser");
+                            removeCurrentRecipeFromDatabase(snapshot, groceryListReference, Home.currentUser.getId());
                         }
                         groceryListReference.removeEventListener(this);
                     }
@@ -255,7 +255,7 @@ public class SingleRecipeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (dataSnapshot.getKey().equals("TestUser")) {
+                    if (dataSnapshot.getKey().equals(Home.currentUser.getId())) {
                         Map<String, Recipe> listToUpdate = dataSnapshot.getValue(new GenericTypeIndicator<Map<String, Recipe>>() {});
                         if (listToUpdate.containsKey(String.valueOf(recipe.getId()))) {
                             saveRecipeButton.setText("Unsave");
@@ -278,7 +278,7 @@ public class SingleRecipeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (dataSnapshot.getKey().equals("TestUser")) {
+                    if (dataSnapshot.getKey().equals(Home.currentUser.getId())) {
                         Map<String, Recipe> listToUpdate = dataSnapshot.getValue(new GenericTypeIndicator<Map<String, Recipe>>() {});
                         if (listToUpdate.containsKey(String.valueOf(recipe.getId()))) {
                             addToList.setText("Remove from list");

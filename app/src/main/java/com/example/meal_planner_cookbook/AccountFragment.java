@@ -35,7 +35,6 @@ public class AccountFragment extends Fragment {
     ProgressBar progressBar;
     boolean editVis, saveVis;
 
-    FirebaseUser user;
     DatabaseReference reference;
     DatabaseReference rootReference, childReference;
     String userID;
@@ -84,40 +83,26 @@ public class AccountFragment extends Fragment {
     }
 
     private void showData() {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("users");
-        userID = user.getUid();
+        //get values of user
+        User currentUser = Home.currentUser;
+        String fullname = currentUser.getFullname();
+        String username = currentUser.getUsername();
+        String email = currentUser.getEmail();
+        String phone = currentUser.getPhone();
+        String password = currentUser.getPassword();
 
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (dataSnapshot.getKey().equals(userID)){
-                        User currentUser = dataSnapshot.getValue(User.class);
-                        //get values of user
-                        String fullname = currentUser.getFullname();
-                        String username = currentUser.getUsername();
-                        String email = currentUser.getEmail();
-                        String phone = currentUser.getPhone();
-                        String password = currentUser.getPassword();
+        //insert values in view
+        accfullname.setText(fullname);
+        accfullname.setEnabled(false);
+        accusername.setText(username);
+        accusername.setEnabled(false);
+        accemail.setText(email);
+        accemail.setEnabled(false);
+        accphone.setText(phone);
+        accphone.setEnabled(false);
+        accpassword.setText(password);
+        accpassword.setEnabled(false);
 
-                        //insert values in view
-                        accfullname.setText(fullname);
-                        accusername.setText(username);
-                        accemail.setText(email);
-                        accphone.setText(phone);
-                        accpassword.setText(password);
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(),
-                        "Something went wrong!", Toast.LENGTH_SHORT);
-            }
-        });
     }
 
     @Override
@@ -143,9 +128,6 @@ public class AccountFragment extends Fragment {
         save.setVisibility(View.INVISIBLE); //set edit to invisible
         logout = view.findViewById(R.id.logoutAccountB);
         progressBar = view.findViewById(R.id.accountPB);
-        //get user
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference();
         //preset user's values
         showData();
 
@@ -172,15 +154,18 @@ public class AccountFragment extends Fragment {
                 String email = accemail.getText().toString();
                 String phone = accphone.getText().toString();
                 String password = accpassword.getText().toString();
-                User user = new User(fullname, username, email, phone, password);
-                reference.child(userID).setValue(user);
+                User user = new User(fullname, username, email, phone, password, FirebaseAuth.getInstance().getCurrentUser().getUid());
+                reference.child(user.getId()).setValue(user);
+                save.setVisibility(View.INVISIBLE);
+                edit.setClickable(true); //set edit to un-clickable
+                edit.setVisibility(View.VISIBLE); //set edit to visible
+                save.setClickable(false); // set save to un-clickable
             }
         });
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                user = FirebaseAuth.getInstance().getCurrentUser();
                 startActivity(new Intent(getContext(), Login.class));
             }
         });

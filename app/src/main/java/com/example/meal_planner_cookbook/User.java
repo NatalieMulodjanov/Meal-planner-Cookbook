@@ -1,17 +1,26 @@
 package com.example.meal_planner_cookbook;
 
 public class User {
-    String fullname, username, email, phone,password;
+    String fullname, username, email, phone,password, id;
 
     public User() {
     }
 
-    public User(String fullname, String username, String email, String phone, String password) {
+    public User(String fullname, String username, String email, String phone, String password, String id) {
         this.fullname = fullname;
         this.username = username;
         this.email = email;
         this.phone = phone;
         this.password = password;
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFullname() { return fullname; }

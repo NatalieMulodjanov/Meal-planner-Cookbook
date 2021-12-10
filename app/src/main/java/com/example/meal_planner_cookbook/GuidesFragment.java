@@ -80,7 +80,7 @@ public class GuidesFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (dataSnapshot.getKey().equals("TestUser")) {
+                    if (dataSnapshot.getKey().equals(Home.currentUser.getId())) {
                         recipes = dataSnapshot.getValue(new GenericTypeIndicator<Map<String, Recipe>>() {});
                         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                         adapter = new GroceryListRvAdapter(getContext(), recipes);

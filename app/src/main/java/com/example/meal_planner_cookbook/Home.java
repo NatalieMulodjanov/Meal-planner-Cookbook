@@ -15,6 +15,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -30,6 +37,9 @@ public class Home extends AppCompatActivity {
     public static FragmentManager fm;
     BottomNavigationView navigationView;
     ImageView imageView;
+    FirebaseUser user;
+    DatabaseReference reference;
+    public static User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +53,27 @@ public class Home extends AppCompatActivity {
 //            ft.add(R.id.fragment_container,  recipesFragment, null);
 //            ft.commit();
 //        }
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("users");
+        String userID = user.getUid();
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.getKey().equals(userID)) {
+                        currentUser = dataSnapshot.getValue(User.class);
+                        currentUser.setId(userID);
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         navigationView = findViewById(R.id.navigationBNB);
         imageView = findViewById(R.id.backImageButton);
