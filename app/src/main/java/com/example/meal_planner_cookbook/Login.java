@@ -58,14 +58,14 @@ public class Login extends AppCompatActivity {
             public void onClick(View view) {
                 loginUser();
                 // [START start_phone_auth]
-                PhoneAuthOptions options =
-                        PhoneAuthOptions.newBuilder(mAuth)
-                                .setPhoneNumber("+15142659329")       // Phone number to verify
-                                .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                                .setActivity(Login.this)                 // Activity (for callback binding)
-                                .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
-                                .build();
-                PhoneAuthProvider.verifyPhoneNumber(options);
+//                PhoneAuthOptions options =
+//                        PhoneAuthOptions.newBuilder(mAuth)
+//                                .setPhoneNumber("")       // Phone number to verify
+//                                .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+//                                .setActivity(Login.this)                 // Activity (for callback binding)
+//                                .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+//                                .build();
+//                PhoneAuthProvider.verifyPhoneNumber(options);
                 // [END start_phone_auth]
             }
         });

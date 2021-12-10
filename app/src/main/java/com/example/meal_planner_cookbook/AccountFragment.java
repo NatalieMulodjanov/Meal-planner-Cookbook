@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -78,67 +79,27 @@ public class AccountFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
             //find views
-            accfullname = getView().findViewById(R.id.fullnameAccountET);
-            accusername = getView().findViewById(R.id.usernameAccountET);
-            accemail = getView().findViewById(R.id.emailAccountET);
-            accphone = getView().findViewById(R.id.phoneAccountET);
-            accpassword = getView().findViewById(R.id.passwordAccountET);
-            edit = getView().findViewById(R.id.editAccountB);
-            edit.setClickable(true); //set edit to un-clickable
-            edit.setVisibility(View.VISIBLE); //set edit to visible
-            save = getView().findViewById(R.id.saveAccountB);
-            save.setClickable(false); // set save to un-clickable
-            save.setVisibility(View.INVISIBLE); //set edit to invisible
-            logout = getView().findViewById(R.id.logoutAccountB);
-            progressBar = getView().findViewById(R.id.accountPB);
-            //get user
-            user = FirebaseAuth.getInstance().getCurrentUser();
-            reference = FirebaseDatabase.getInstance().getReference();
-            //preset user's values
-            showData();
-
-            edit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    accfullname.setClickable(true);
-                    accusername.setClickable(true);
-                    accemail.setClickable(true);
-                    accphone.setClickable(true);
-                    accpassword.setClickable(true);
-                    edit.setClickable(false); //set edit to un-clickable
-                    edit.setVisibility(View.INVISIBLE); //set edit to visible
-                    save.setClickable(true); // set save to un-clickable
-                    save.setVisibility(View.VISIBLE); //set edit to invisible
-                }
-            });
-
-            logout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    user = FirebaseAuth.getInstance().getCurrentUser();
-                    startActivity(new Intent(getContext(), Login.class));
-                }
-            });
         }
+
     }
 
     private void showData() {
         user = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("user");
+        reference = FirebaseDatabase.getInstance().getReference("users");
         userID = user.getUid();
-        String userName = (String) user.getDisplayName();
 
-        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (dataSnapshot.getKey().equals(user.getUid())){
+                    if (dataSnapshot.getKey().equals(userID)){
+                        User currentUser = dataSnapshot.getValue(User.class);
                         //get values of user
-                        String fullname = dataSnapshot.child("fullname").getValue(String.class);
-                        String username = dataSnapshot.child("username").getValue(String.class);
-                        String email = dataSnapshot.child("email").getValue(String.class);
-                        String phone = dataSnapshot.child("phone").getValue(String.class);
-                        String password = dataSnapshot.child("password").getValue(String.class);
+                        String fullname = currentUser.getFullname();
+                        String username = currentUser.getUsername();
+                        String email = currentUser.getEmail();
+                        String phone = currentUser.getPhone();
+                        String password = currentUser.getPassword();
 
                         //insert values in view
                         accfullname.setText(fullname);
@@ -148,10 +109,6 @@ public class AccountFragment extends Fragment {
                         accpassword.setText(password);
                     }
                 }
-
-
-
-
 
             }
 
@@ -168,5 +125,65 @@ public class AccountFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_account, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        accfullname = view.findViewById(R.id.fullnameAccountET);
+        accusername = view.findViewById(R.id.usernameAccountET);
+        accemail = view.findViewById(R.id.emailAccountET);
+        accphone = view.findViewById(R.id.phoneAccountET);
+        accpassword = view.findViewById(R.id.passwordAccountET);
+        edit = view.findViewById(R.id.editAccountB);
+        edit.setClickable(true); //set edit to un-clickable
+        edit.setVisibility(View.VISIBLE); //set edit to visible
+        save = view.findViewById(R.id.saveAccountB);
+        save.setClickable(false); // set save to un-clickable
+        save.setVisibility(View.INVISIBLE); //set edit to invisible
+        logout = view.findViewById(R.id.logoutAccountB);
+        progressBar = view.findViewById(R.id.accountPB);
+        //get user
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference();
+        //preset user's values
+        showData();
+
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                accfullname.setClickable(true);
+                accusername.setClickable(true);
+                accemail.setClickable(true);
+                accphone.setClickable(true);
+                accpassword.setClickable(true);
+                edit.setClickable(false); //set edit to un-clickable
+                edit.setVisibility(View.INVISIBLE); //set edit to visible
+                save.setClickable(true); // set save to un-clickable
+                save.setVisibility(View.VISIBLE); //set edit to invisible
+            }
+        });
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String fullname = accfullname.getText().toString();
+                String username = accusername.getText().toString();
+                String email = accemail.getText().toString();
+                String phone = accphone.getText().toString();
+                String password = accpassword.getText().toString();
+                User user = new User(fullname, username, email, phone, password);
+                reference.child(userID).setValue(user);
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                user = FirebaseAuth.getInstance().getCurrentUser();
+                startActivity(new Intent(getContext(), Login.class));
+            }
+        });
+
     }
 }
