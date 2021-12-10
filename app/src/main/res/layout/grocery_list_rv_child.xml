@@ -14,7 +14,8 @@
         android:id="@+id/recipeTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/purple_700"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         android:layout_gravity="center"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"
@@ -26,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="237dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
         android:layout_marginBottom="20dp"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 </LinearLayout>

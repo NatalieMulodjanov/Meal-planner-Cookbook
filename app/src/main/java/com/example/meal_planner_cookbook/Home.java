@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,6 +29,7 @@ public class Home extends AppCompatActivity {
 
     public static FragmentManager fm;
     BottomNavigationView navigationView;
+    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +45,18 @@ public class Home extends AppCompatActivity {
 //        }
 
         navigationView = findViewById(R.id.navigationBNB);
+        imageView = findViewById(R.id.backImageButton);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (fm.getBackStackEntryCount() > 0) {
+                    fm.popBackStack();
+                    fm.popBackStack();
+                }
+            }
+        });
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RecipesFragment()).commit(); //set initial fragment
+        fm.beginTransaction().replace(R.id.fragment_container, new RecipesFragment()).commit(); //set initial fragment
         navigationView.setSelectedItemId(R.id.nav_recipes); //set initial id to discover fragment
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() { //navigation listener
             @Override
@@ -63,7 +76,7 @@ public class Home extends AppCompatActivity {
                         fragment = new AccountFragment();
                         break;
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit(); //commit the fragment
+                fm.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("my_fragment2").commit(); //commit the fragment
                 return true;
             }
         });

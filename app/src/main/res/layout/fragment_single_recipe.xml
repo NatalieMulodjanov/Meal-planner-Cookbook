@@ -18,7 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="30dp"/>
+            android:textSize="30dp"
+            android:textColor="@color/black"/>
 
 
         <ImageView
@@ -53,15 +54,14 @@
             android:layout_height="wrap_content"
             android:text="Share" />
     </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
         <ListView
             android:id="@+id/ingredients"
             android:layout_width="200dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="3dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -71,12 +71,13 @@
             <ListView
                 android:id="@+id/diet"
                 android:layout_width="200dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
                 android:layout_marginEnd="3dp"
                 android:layout_marginBottom="12dp"
                 app:layout_constraintVertical_bias="0.45" />
         </LinearLayout>
+
 
         <TextView
             android:id="@+id/instructions"
@@ -84,7 +85,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="LAL"
+            android:text=""
             android:textSize="18dp"/>
+
+        <Button
+            android:id="@+id/commentsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View comments"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center"/>
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

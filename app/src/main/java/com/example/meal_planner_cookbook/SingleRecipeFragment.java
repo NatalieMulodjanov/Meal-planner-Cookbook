@@ -1,6 +1,7 @@
 package com.example.meal_planner_cookbook;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -58,6 +59,7 @@ public class SingleRecipeFragment extends Fragment {
     DatabaseReference cookBookReference;
     DatabaseReference groceryListReference;
     Recipe recipe;
+    Button commentsButton;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -133,6 +135,7 @@ public class SingleRecipeFragment extends Fragment {
         saveRecipeButton = view.findViewById(R.id.saveRecipeButton);
         addToList = view.findViewById(R.id.addToList);
         share = view.findViewById(R.id.share);
+        commentsButton = view.findViewById(R.id.commentsButton);
         rootNode = FirebaseDatabase.getInstance();
         cookBookReference = rootNode.getReference("cookbook");
         groceryListReference = rootNode.getReference("groceryList");
@@ -143,7 +146,11 @@ public class SingleRecipeFragment extends Fragment {
                 cookBookReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        addCurrentRecipeToDatabase(snapshot, cookBookReference, "TestUser");
+                        if (saveRecipeButton.getText().equals("Save")) {
+                            addCurrentRecipeToDatabase(snapshot, cookBookReference, "TestUser");
+                        } else {
+                            removeCurrentRecipeFromDatabase(snapshot, cookBookReference, "TestUser");
+                        }
                         cookBookReference.removeEventListener(this);
                     }
 
@@ -161,7 +168,11 @@ public class SingleRecipeFragment extends Fragment {
                 groceryListReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        addCurrentRecipeToDatabase(snapshot, groceryListReference, "TestUser");
+                        if (addToList.getText().equals("Add to list")) {
+                            addCurrentRecipeToDatabase(snapshot, groceryListReference, "TestUser");
+                        } else {
+                            removeCurrentRecipeFromDatabase(snapshot, groceryListReference, "TestUser");
+                        }
                         groceryListReference.removeEventListener(this);
                     }
 
@@ -207,14 +218,28 @@ public class SingleRecipeFragment extends Fragment {
         databaseToAddTo.child(username).setValue(newList);
     }
 
+    private void removeCurrentRecipeFromDatabase(DataSnapshot snapshot, DatabaseReference databaseToAddTo, String username) {
+        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+            if (dataSnapshot.getKey().equals(username)) {
+                Map<String, Recipe> listToUpdate = dataSnapshot.getValue(new GenericTypeIndicator<Map<String, Recipe>>() {});
+                listToUpdate.remove(String.valueOf(recipe.getId()));
+                databaseToAddTo.child(username).setValue(listToUpdate);
+                return;
+            }
+        }
+    }
+
     private void populateView() {
         for(Ingredient ingredient1 : recipe.getExtendedIngredients()){
             ingredientList.add(ingredient1.getOriginalString());
         }
 
         title.setText(recipe.getTitle());
-        Glide.with(getView()).asBitmap().load(new GlideUrl(recipe.getImage(), new LazyHeaders.Builder().addHeader("User-Agent", "your_user_agent").build())).into(image);
+        if (recipe.getImage() != null) {
+            Glide.with(getView()).asBitmap().load(new GlideUrl(recipe.getImage(), new LazyHeaders.Builder().addHeader("User-Agent", "your_user_agent").build())).into(image);
+        }
         instructions.setText(Html.fromHtml(recipe.getInstructions()));
+        instructions.setNestedScrollingEnabled(true);
         List<String> diets = getDiet(recipe);
         ArrayAdapter adapter = new ArrayAdapter(getContext(),
                 R.layout.ingredient_list_item, R.id.ingredient, ingredientList);
@@ -223,6 +248,7 @@ public class SingleRecipeFragment extends Fragment {
         ArrayAdapter adapterDiet = new ArrayAdapter(getContext(),
                 R.layout.ingredient_list_item, R.id.ingredient, diets);
         diet.setAdapter(adapterDiet);
+        diet.setNestedScrollingEnabled(true);
         setListViewHeightBasedOnChildren(diet);
 
         cookBookReference.addValueEventListener(new ValueEventListener() {
@@ -232,12 +258,14 @@ public class SingleRecipeFragment extends Fragment {
                     if (dataSnapshot.getKey().equals("TestUser")) {
                         Map<String, Recipe> listToUpdate = dataSnapshot.getValue(new GenericTypeIndicator<Map<String, Recipe>>() {});
                         if (listToUpdate.containsKey(String.valueOf(recipe.getId()))) {
-                            saveRecipeButton.setEnabled(false);
-                            saveRecipeButton.setText("Saved");
+                            saveRecipeButton.setText("Unsave");
+                            saveRecipeButton.setBackgroundColor(Color.GRAY);
                             return;
                         }
                     }
                 }
+                saveRecipeButton.setText("Save");
+                saveRecipeButton.setBackgroundColor(Color.parseColor("#3a9ffd"));
             }
 
             @Override
@@ -253,12 +281,14 @@ public class SingleRecipeFragment extends Fragment {
                     if (dataSnapshot.getKey().equals("TestUser")) {
                         Map<String, Recipe> listToUpdate = dataSnapshot.getValue(new GenericTypeIndicator<Map<String, Recipe>>() {});
                         if (listToUpdate.containsKey(String.valueOf(recipe.getId()))) {
-                            addToList.setEnabled(false);
-                            addToList.setText("Added to list");
+                            addToList.setText("Remove from list");
+                            addToList.setBackgroundColor(Color.GRAY);
                             return;
                         }
                     }
                 }
+                addToList.setText("Add to list");
+                addToList.setBackgroundColor(Color.parseColor("#3a9ffd"));
             }
 
             @Override
@@ -276,6 +306,14 @@ public class SingleRecipeFragment extends Fragment {
                 shareIntent.putExtra(Intent.EXTRA_TEXT, text);
                 shareIntent.setType("text/plain");
                 startActivity(Intent.createChooser(shareIntent, "Share recipe..."));
+            }
+        });
+        commentsButton.setVisibility(View.VISIBLE);
+        commentsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new CommentsFragment(recipe);
+                Home.fm.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("my_fragment").commit();
             }
         });
 

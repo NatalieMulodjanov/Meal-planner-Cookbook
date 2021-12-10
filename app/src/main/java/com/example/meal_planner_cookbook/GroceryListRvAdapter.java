@@ -52,7 +52,7 @@ public class GroceryListRvAdapter extends RecyclerView.Adapter <GroceryListRvAda
             @Override
             public void onClick(View view) {
                 Fragment fragment = new SingleRecipeFragment(currentRecipe);
-                Home.fm.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                Home.fm.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("my_fragment").commit();
             }
         });
         for (Ingredient ingredient: currentRecipe.getExtendedIngredients()) {

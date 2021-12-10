@@ -39,6 +39,8 @@ public class CookBookRVAdapter extends RecyclerView.Adapter <CookBookRVAdapter.V
         Recipe currentRecipe = data.get(data.keySet().toArray()[position]);
         holder.title.setText(currentRecipe.getTitle());
         Glide.with(inflator.getContext()).asBitmap().load(new GlideUrl(currentRecipe.getImage(), new LazyHeaders.Builder().addHeader("User-Agent", "your_user_agent").build())).into(holder.image);
+        int cookedUnder = (int)currentRecipe.getReadyInMinutes();
+        holder.cookedUnder.setText("Cooked in " + cookedUnder + " Minutes");
         holder.itemView.setId((int)currentRecipe.getId());
     }
 
@@ -51,12 +53,14 @@ public class CookBookRVAdapter extends RecyclerView.Adapter <CookBookRVAdapter.V
     public class ViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title;
         ImageView image;
+        TextView cookedUnder;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             title = itemView.findViewById(R.id.title);
             image = itemView.findViewById(R.id.image);
+            cookedUnder = itemView.findViewById(R.id.cookedUnderText);
         }
 
 
@@ -65,7 +69,7 @@ public class CookBookRVAdapter extends RecyclerView.Adapter <CookBookRVAdapter.V
             String id = String.valueOf(view.getId());
             Recipe currentRecipe = data.get(id);
             Fragment fragment = new SingleRecipeFragment(currentRecipe);
-            Home.fm.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            Home.fm.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("my_fragment").commit();
         }
     }
 

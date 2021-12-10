@@ -38,10 +38,12 @@ public class RecipeRVAdapter extends RecyclerView.Adapter <RecipeRVAdapter.ViewH
             if (data instanceof GetRandomRecipesResponse){
                 GetRandomRecipesResponse response = (GetRandomRecipesResponse)data;
                 String title = response.getRecipes().get(position).getTitle();
+                int cookedUnder = (int)response.getRecipes().get(position).getReadyInMinutes();
                 if (response.getRecipes().get(position).getImage() != null && !response.getRecipes().get(position).getImage().equals("")) {
                     Glide.with(inflator.getContext()).asBitmap().load(new GlideUrl(response.getRecipes().get(position).getImage(), new LazyHeaders.Builder().addHeader("User-Agent", "your_user_agent").build())).into(holder.image);
                 }
                 holder.title.setText(holder.title.getText() + title);
+                holder.cookedUnder.setText("Cooked in " + cookedUnder + " Minutes");
                 holder.itemView.setId((int)response.getRecipes().get(position).getId());
             } else if (data instanceof GetSearchResultsResponse){
                 GetSearchResultsResponse response = (GetSearchResultsResponse)data;
@@ -70,12 +72,14 @@ public class RecipeRVAdapter extends RecyclerView.Adapter <RecipeRVAdapter.ViewH
     public class ViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title;
         ImageView image;
+        TextView cookedUnder;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             title = itemView.findViewById(R.id.title);
             image = itemView.findViewById(R.id.image);
+            cookedUnder = itemView.findViewById(R.id.cookedUnderText);
         }
 
 
@@ -83,7 +87,7 @@ public class RecipeRVAdapter extends RecyclerView.Adapter <RecipeRVAdapter.ViewH
         public void onClick(View view) {
             int id = view.getId();
             Fragment fragment = new SingleRecipeFragment(id);
-            Home.fm.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            Home.fm.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("my_fragment").commit();
         }
     }
 

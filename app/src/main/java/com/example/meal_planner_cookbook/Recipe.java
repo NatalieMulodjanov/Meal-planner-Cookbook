@@ -1,5 +1,6 @@
 package com.example.meal_planner_cookbook;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Recipe {
@@ -10,7 +11,7 @@ public class Recipe {
     private boolean dairyFree;
     private boolean cheap;
     private int servings;
-    private int preparationMinutes;
+    private int readyInMinutes;
     private int cookingMinutes;
     private List<Ingredient> extendedIngredients;
     private long id;
@@ -21,7 +22,7 @@ public class Recipe {
 
     public Recipe() {}
 
-    public Recipe(boolean vegetarian, boolean vegan, boolean ketogenic, boolean glutenFree, boolean dairyFree, boolean cheap, int servings, int preparationMinutes, int cookingMinutes, List<Ingredient> extendedIngredients, long id, String title, String image, String instructions) {
+    public Recipe(boolean vegetarian, boolean vegan, boolean ketogenic, boolean glutenFree, boolean dairyFree, boolean cheap, int servings, int readyInMinutes, int cookingMinutes, List<Ingredient> extendedIngredients, long id, String title, String image, String instructions) {
         this.vegetarian = vegetarian;
         this.vegan = vegan;
         this.ketogenic = ketogenic;
@@ -29,7 +30,7 @@ public class Recipe {
         this.dairyFree = dairyFree;
         this.cheap = cheap;
         this.servings = servings;
-        this.preparationMinutes = preparationMinutes;
+        this.readyInMinutes = readyInMinutes;
         this.cookingMinutes = cookingMinutes;
         this.extendedIngredients = extendedIngredients;
         this.id = id;
@@ -102,12 +103,12 @@ public class Recipe {
         this.servings = servings;
     }
 
-    public double getPreparationMinutes() {
-        return preparationMinutes;
+    public double getReadyInMinutes() {
+        return readyInMinutes;
     }
 
-    public void setPreparationMinutes(int preparationMinutes) {
-        this.preparationMinutes = preparationMinutes;
+    public void setReadyInMinutes(int preparationMinutes) {
+        this.readyInMinutes = preparationMinutes;
     }
 
     public double getCookingMinutes() {
