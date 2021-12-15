@@ -144,7 +144,7 @@ public class Register extends AppCompatActivity {
                             } else { //if non-successful register
                                 Toast.makeText(getApplicationContext(),
                                     "Failed to register user!\nTry again!", Toast.LENGTH_LONG).show(); //error message
-                                progressBar.setVisibility(View.INVISIBLE);
+                                progressBar.setVisibility(View.GONE);
                             }
                         }
                     });

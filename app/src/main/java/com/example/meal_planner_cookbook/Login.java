@@ -77,46 +77,46 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-            @Override
-            public void onVerificationCompleted(PhoneAuthCredential credential) {
-                // This callback will be invoked in two situations:
-                // 1 - Instant verification. In some cases the phone number can be instantly
-                //     verified without needing to send or enter a verification code.
-                // 2 - Auto-retrieval. On some devices Google Play services can automatically
-                //     detect the incoming verification SMS and perform verification without
-                //     user action.
-                signInWithPhoneAuthCredential(credential);
-            }
-
-            @Override
-            public void onVerificationFailed(FirebaseException e) {
-                // This callback is invoked in an invalid request for verification is made,
-                // for instance if the the phone number format is not valid.
-
-                if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    // Invalid request
-                } else if (e instanceof FirebaseTooManyRequestsException) {
-                    // The SMS quota for the project has been exceeded
-                }
-                // Show a message and update the UI
-            }
-
-            @Override
-            public void onCodeSent(String verificationId,
-                                   PhoneAuthProvider.ForceResendingToken token) {
-                // The SMS verification code has been sent to the provided phone number, we
-                // now need to ask the user to enter the code and then construct a credential
-                // by combining the code with a verification ID.
-
-                // Save verification ID and resending token so we can use them later
-                mVerificationId = verificationId;
-                mResendToken = token;
-                Toast.makeText(getApplicationContext(),
-                        mResendToken.toString(), Toast.LENGTH_SHORT).show();
-            }
-        };
+//        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+//
+//            @Override
+//            public void onVerificationCompleted(PhoneAuthCredential credential) {
+//                // This callback will be invoked in two situations:
+//                // 1 - Instant verification. In some cases the phone number can be instantly
+//                //     verified without needing to send or enter a verification code.
+//                // 2 - Auto-retrieval. On some devices Google Play services can automatically
+//                //     detect the incoming verification SMS and perform verification without
+//                //     user action.
+//                signInWithPhoneAuthCredential(credential);
+//            }
+//
+//            @Override
+//            public void onVerificationFailed(FirebaseException e) {
+//                // This callback is invoked in an invalid request for verification is made,
+//                // for instance if the the phone number format is not valid.
+//
+//                if (e instanceof FirebaseAuthInvalidCredentialsException) {
+//                    // Invalid request
+//                } else if (e instanceof FirebaseTooManyRequestsException) {
+//                    // The SMS quota for the project has been exceeded
+//                }
+//                // Show a message and update the UI
+//            }
+//
+//            @Override
+//            public void onCodeSent(String verificationId,
+//                                   PhoneAuthProvider.ForceResendingToken token) {
+//                // The SMS verification code has been sent to the provided phone number, we
+//                // now need to ask the user to enter the code and then construct a credential
+//                // by combining the code with a verification ID.
+//
+//                // Save verification ID and resending token so we can use them later
+//                mVerificationId = verificationId;
+//                mResendToken = token;
+//                Toast.makeText(getApplicationContext(),
+//                        mResendToken.toString(), Toast.LENGTH_SHORT).show();
+//            }
+//        };
     }
 
     private void loginUser() {
@@ -146,11 +146,20 @@ public class Login extends AppCompatActivity {
             return;
         }
 
+        progressBar.setVisibility(View.VISIBLE);
+
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
-                    startActivityForResult(new Intent(getApplicationContext(), Home.class),1);
+                    FirebaseUser muser = FirebaseAuth.getInstance().getCurrentUser();
+                    if(muser.isEmailVerified()){
+                        startActivity(new Intent(getApplicationContext(), Home.class));
+                    } else {
+                        muser.sendEmailVerification();
+                        Toast.makeText(getApplicationContext(),
+                                "Check your email to verify your account!", Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     Toast.makeText(getApplicationContext(),
                             "Failed to login user!\nCheck credentials!", Toast.LENGTH_LONG).show();
@@ -159,38 +168,38 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if(requestCode == 1) {
+//            if(resultCode == RESULT_OK) {
+//                String verificationCode = data.getStringExtra("code");
+//                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, verificationCode);
+//                signInWithPhoneAuthCredential(credential);
+//            }
+//        }
+//    }
 
-        if(requestCode == 1) {
-            if(resultCode == RESULT_OK) {
-                String verificationCode = data.getStringExtra("code");
-                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, verificationCode);
-                signInWithPhoneAuthCredential(credential);
-            }
-        }
-    }
-
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = task.getResult().getUser();
-                            Intent intent = new Intent(getApplicationContext(), Home.class);
-                            intent.putExtra("authenticatedUser", user);
-                            startActivity(intent);
-
-                        } else {
-                            // Sign in failed, display a message and update the UI
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                Toast.makeText(getApplicationContext(), "BITCH YOU THOUGHT!", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    }
-                });
-    }
+//    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+//        mAuth.signInWithCredential(credential)
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            // Sign in success, update UI with the signed-in user's information
+//                            FirebaseUser user = task.getResult().getUser();
+//                            Intent intent = new Intent(getApplicationContext(), Home.class);
+//                            intent.putExtra("authenticatedUser", user);
+//                            startActivity(intent);
+//
+//                        } else {
+//                            // Sign in failed, display a message and update the UI
+//                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+//                                Toast.makeText(getApplicationContext(), "BITCH YOU THOUGHT!", Toast.LENGTH_LONG).show();
+//                            }
+//                        }
+//                    }
+//                });
+//    }
 }
